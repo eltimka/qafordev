@@ -9,6 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -77,5 +80,56 @@ public class DeveloperRepositoryTests {
       //then
       assertThat(obtainedDeveloper).isNull();
 
+  }
+  @Test
+  @DisplayName("Test get all developers functionality")
+  public void givenThreeDevelopersAreStored_whenFindAll_thenAllDeveloperAreReturned(){
+      //given
+      DeveloperEntity developer1 = DataUtils.getJohnDoeTransient();
+      DeveloperEntity developer2 = DataUtils.getFrankJonesTransient();
+      DeveloperEntity developer3 = DataUtils.getMikeSmithTransient();
+
+      developerRepository.saveAll(List.of(developer1, developer2, developer3));
+      //when
+      List<DeveloperEntity> obtainedDevelopers = developerRepository.findAll();
+      //then
+      assertThat(CollectionUtils.isEmpty(obtainedDevelopers)).isFalse();
+  }
+  @Test
+  @DisplayName("Test get developer by email functionality")
+  public void givenDeveloperSaved_whenGetByEmail_thenDeveloperIsReturned(){
+      //given
+      DeveloperEntity developer = DataUtils.getJohnDoeTransient();
+      developerRepository.save(developer);
+      //when
+      DeveloperEntity obtainedDeveloper = developerRepository.findByEmail(developer.getEmail());
+      //then
+      assertThat(obtainedDeveloper).isNotNull();
+      assertThat(obtainedDeveloper.getEmail()).isEqualTo(developer.getEmail());
+  }
+  public void givenThreedevelopersAndTwoAreActive_whenFindAllActiveBySpecialty_thenReturnOnlyTwodevelopers(){
+      //given
+      DeveloperEntity developer1 = DataUtils.getJohnDoeTransient();
+      DeveloperEntity developer2 = DataUtils.getMikeSmithTransient();
+      DeveloperEntity developer3 = DataUtils.getFrankJonesTransient();
+
+      developerRepository.saveAll(List.of(developer1, developer2, developer3));
+      //when
+      List<DeveloperEntity> obtainedDevelopers = developerRepository.findAllActiveBySpecialty("Java");
+      //then
+      assertThat(CollectionUtils.isEmpty(obtainedDevelopers)).isFalse();
+      assertThat(obtainedDevelopers.size()).isEqualTo(2);
+  }
+  @Test
+  @DisplayName("Test get developer by email functionality")
+  public void givenDeveloperIsSaved_whenDeleteById_thenDeveloperIsRemovedFromDB() {
+      //given
+      DeveloperEntity developer = DataUtils.getJohnDoeTransient();
+      developerRepository.save(developer);
+      //when
+      developerRepository.deleteById(developer.getId());
+      //then
+      DeveloperEntity obtainedDeveloper = developerRepository.findById(developer.getId()).orElse(null);
+      assertThat(obtainedDeveloper).isNull();
   }
 }
