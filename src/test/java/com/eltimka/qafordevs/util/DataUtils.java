@@ -34,7 +34,7 @@ public class DataUtils {
                 .status(Status.DELETED)
                 .build();
     }
-    public  DeveloperEntity getJohnDoePersisted() {
+    public static DeveloperEntity getJohnDoePersisted() {
         return DeveloperEntity.builder()
                 .id(1)
                 .firstName("John")
@@ -44,7 +44,7 @@ public class DataUtils {
                 .status(Status.ACTIVE)
                 .build();
     }
-    public  DeveloperEntity getMikeSmithPersisted() {
+    public static DeveloperEntity getMikeSmithPersisted() {
         return DeveloperEntity.builder()
                 .id(2)
                 .firstName("Mike")
