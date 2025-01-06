@@ -3,9 +3,16 @@ server:
 
   spring:
     application:
-      name: "qafordevs"
+      name: qafordevs
+      datasource:
+        url: jdbc:postgresql://localhost:5432/qafordevs
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+
       jpa:
-        hibernate:
-          ddl-auto: create
-          show-sql: true
+          hibernate:
+            ddl-auto: create
+            show-sql: true
+
 
